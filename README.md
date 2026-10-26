@@ -3,8 +3,8 @@ Computer Graphics Project 4, War Card Game
 
 ## Group Members:
 - Peter Hajj (PM, )
-- Jackson Higgins (TODO)
-- Laura Salamanca (TODO)
+- Jackson Higgins (TODO add list of contributions)
+- Laura Salamanca (TODO add list of contributions)
 
 ## Overview
 
@@ -31,5 +31,8 @@ TODO
 ### Challenges 
 TODO
 
+### Resources
+- Playing card textures from [webisso/playing-cards](https://github.com/webisso/playing-cards) on GitHub
+- Rules for War: http://www.pagat.com/war/war.html
 ### LLM Prompts used
 See [prompts.md](docs/prompts.md)

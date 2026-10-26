@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { perspectiveCamera } from "./camera.js";
+import { loadTexture, createCard } from "./card.js";
 
 const MOUSE_SENSITIVITY = 0.002;
 const CAMERA_MOVE_SPEED = 0.1;
