@@ -9,5 +9,6 @@ This file records the prompts we gave to AI coding assistents and/or other LLMs 
   - Added the table to the scene in main.js.
   - Adjusted the angle of the camera so all four legs and the tabletop are visable
 ## Jackson 
+- Changed all of the table and card materials from MeshBasicMaterial to MeshPhongMaterial so they respond to lighting.
 
 ## Laura

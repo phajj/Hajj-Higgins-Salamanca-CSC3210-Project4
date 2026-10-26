@@ -10,8 +10,8 @@ const HEIGHT = 3.5;
 const THICKNESS = 0.02;
 
 // Every card has plain red back with white edge
-const backMaterial = new THREE.MeshBasicMaterial({color: 0xD61305});
-const edgeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+const backMaterial = new THREE.MeshPhongMaterial({color: 0xD61305});
+const edgeMaterial = new THREE.MeshPhongMaterial({color: 0xffffff});
 const cardGeometry = new THREE.BoxGeometry(WIDTH, HEIGHT, THICKNESS);
 
 const loader = new THREE.TextureLoader();
@@ -47,7 +47,7 @@ export function loadTexture() {
  * @returns {THREE.Mesh} with suit and val stored in userData
  */
 export function createCard(texture, suit, val) {
-    const frontMaterial = new THREE.MeshBasicMaterial({ map: texture });
+    const frontMaterial = new THREE.MeshPhongMaterial({ map: texture });
     const card = new THREE.Mesh(cardGeometry, [
         edgeMaterial, edgeMaterial, edgeMaterial, edgeMaterial, frontMaterial, backMaterial//+x, -x, +y, -y, +z, -z
     ]);

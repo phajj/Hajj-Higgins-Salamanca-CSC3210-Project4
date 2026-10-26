@@ -11,7 +11,7 @@ const LEG_SIZE = 2;
 const LEG_LENGTH = 25;
 
 // Wood texture shared by the top and legs (cleaned up by Claude Code)
-const material = new THREE.MeshBasicMaterial({
+const material = new THREE.MeshPhongMaterial({
     map: new THREE.TextureLoader().load('resources/tableTex.jpg', (tex) => tex.colorSpace = THREE.SRGBColorSpace)
 });
 const legGeometry = new THREE.BoxGeometry(LEG_SIZE, LEG_SIZE, LEG_LENGTH);
