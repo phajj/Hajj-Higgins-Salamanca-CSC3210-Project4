@@ -70,12 +70,10 @@ var wPresssed = false;
 var aPresssed = false;
 var sPresssed = false;
 var dPresssed = false;
-var qPresssed = false;
-var ePresssed = false;
 
 /**
  * Handles keyboard input:
- * w a s d move the point light, q e rotate the camera,
+ * w a s d move the point light,
  * p toggles the point light, l toggles the ambient light and m toggles shadows
  * (copied and modified from Project 2)
  */
@@ -90,10 +88,6 @@ function keyboardInput() {
       sPresssed = true;
     if (event.key.toLocaleLowerCase() === "d")
       dPresssed = true;
-    if (event.key.toLocaleLowerCase() === "q")
-      qPresssed = true;
-    if (event.key.toLocaleLowerCase() === "e")
-      ePresssed = true;
     if (event.key.toLocaleLowerCase() === "p" && !event.repeat)
       pointLight.visible = !pointLight.visible;
     if (event.key.toLocaleLowerCase() === "l" && !event.repeat)
@@ -113,10 +107,6 @@ function keyboardInput() {
       sPresssed = false;
     if (event.key.toLocaleLowerCase() === "d")
       dPresssed = false;
-    if (event.key.toLocaleLowerCase() === "q")
-      qPresssed = false;
-    if (event.key.toLocaleLowerCase() === "e")
-      ePresssed = false;
   });
 }
 
@@ -152,17 +142,6 @@ function updateMovement() {
     pointLight.position.addScaledVector(movement.normalize(), LIGHT_MOVE_SPEED);
 }
 
-/**
- * Rotates the perspective camera left or right.
- * @returns {void}
- */
-function rotateCam(){
-  if (qPresssed)
-    camera.rotation.z += 0.01;
-  if (ePresssed)
-    camera.rotation.z -= 0.01;
-}
-
 keyboardInput();
 
 /**
@@ -170,7 +149,6 @@ keyboardInput();
  */
 function animate() {
   updateMovement();
-  rotateCam();
   renderer.render(scene, camera);
 }
 
