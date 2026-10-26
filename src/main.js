@@ -6,9 +6,22 @@ import { createTable } from "./table.js";
 const MOUSE_SENSITIVITY = 0.002;
 const LIGHT_MOVE_SPEED = 0.1;
 
+const loader = new THREE.CubeTextureLoader();
+loader.setPath('resources/skybox/');
+const skyboxTexture = loader.load([
+  'Left.png',
+  'Right.png',
+  'Up.png',
+  'Down.png',
+  'Front.png',
+  'Back.png'
+]);
+
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+scene.background = skyboxTexture;
+// Rotate skybox to match table
+scene.backgroundRotation.x = Math.PI / 2;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -29,6 +42,11 @@ const pointLight = new THREE.PointLight(0xffffff, 1000);
 pointLight.position.set(0, 0, 20);
 pointLight.castShadow = true;
 scene.add(pointLight);
+
+const sunLight = new THREE.DirectionalLight(0xfff2d9, 1.5);
+sunLight.castShadow = true;
+sunLight.position.set(20, 10, 40);
+scene.add(sunLight);
 
 // Table
 const table = createTable();
@@ -52,12 +70,10 @@ var wPresssed = false;
 var aPresssed = false;
 var sPresssed = false;
 var dPresssed = false;
-var qPresssed = false;
-var ePresssed = false;
 
 /**
  * Handles keyboard input:
- * w a s d move the point light, q e rotate the camera,
+ * w a s d move the point light,
  * p toggles the point light, l toggles the ambient light and m toggles shadows
  * (copied and modified from Project 2)
  */
@@ -72,16 +88,13 @@ function keyboardInput() {
       sPresssed = true;
     if (event.key.toLocaleLowerCase() === "d")
       dPresssed = true;
-    if (event.key.toLocaleLowerCase() === "q")
-      qPresssed = true;
-    if (event.key.toLocaleLowerCase() === "e")
-      ePresssed = true;
     if (event.key.toLocaleLowerCase() === "p" && !event.repeat)
       pointLight.visible = !pointLight.visible;
     if (event.key.toLocaleLowerCase() === "l" && !event.repeat)
       ambientLight.visible = !ambientLight.visible;
     if (event.key.toLocaleLowerCase() === "m" && !event.repeat)
       pointLight.castShadow = !pointLight.castShadow;
+      sunLight.castShadow = !sunLight.castShadow;
     });
 
   // Handle keyup events to stop movement
@@ -94,10 +107,6 @@ function keyboardInput() {
       sPresssed = false;
     if (event.key.toLocaleLowerCase() === "d")
       dPresssed = false;
-    if (event.key.toLocaleLowerCase() === "q")
-      qPresssed = false;
-    if (event.key.toLocaleLowerCase() === "e")
-      ePresssed = false;
   });
 }
 
@@ -133,17 +142,6 @@ function updateMovement() {
     pointLight.position.addScaledVector(movement.normalize(), LIGHT_MOVE_SPEED);
 }
 
-/**
- * Rotates the perspective camera left or right.
- * @returns {void}
- */
-function rotateCam(){
-  if (qPresssed)
-    camera.rotation.z += 0.01;
-  if (ePresssed)
-    camera.rotation.z -= 0.01;
-}
-
 keyboardInput();
 
 /**
@@ -151,7 +149,6 @@ keyboardInput();
  */
 function animate() {
   updateMovement();
-  rotateCam();
   renderer.render(scene, camera);
 }
 
