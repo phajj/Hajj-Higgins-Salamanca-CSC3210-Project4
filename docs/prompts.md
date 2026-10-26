@@ -5,6 +5,9 @@ This file records the prompts we gave to AI coding assistents and/or other LLMs 
     - **Note from Peter:** I edited this prompt to include *'s around the opening < for the source image so it doesn't display the actual image in this markdown.
 - make a test envirment that lays out all 52 cards on a plain and lets the use click on cards to pick up and drag. double click to flip the card. Put this test geometry in @.gitignore
   - Added keyboard camera controls and zooming to the test so the card PNGs can be checked for resolution at different zooms and angles.
+- Clean up @src/table.js . Currently I had a lot of articles left over from copy pasting from Three.js's docs, variables such as texture then in const material = new THREE.MeshBasicMaterial({map:texture}) are unnecessary to be formatted like that. Additionally clean up the loop to adjust where the legs get generated, they are supposed to hit all four corners of the topGeo
+  - Added the table to the scene in main.js.
+  - Adjusted the angle of the camera so all four legs and the tabletop are visable
 ## Jackson 
 
 ## Laura

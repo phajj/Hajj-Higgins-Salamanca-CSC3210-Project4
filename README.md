@@ -32,7 +32,8 @@ TODO
 TODO
 
 ### Resources
-- Playing card textures from [webisso/playing-cards](https://github.com/webisso/playing-cards) on GitHub
+- Playing card textures: [webisso/playing-cards](https://github.com/webisso/playing-cards) on GitHub
 - Rules for War: http://www.pagat.com/war/war.html
+- Table texture: [Magnific](https://www.magnific.com/free-photo/natural-wooden-background_5505940.htm#fromView=keyword&page=1&position=6&uuid=5cf89975-08ea-41e9-9edf-86598d63d669&track=ais_hybrid&query=Wood+texture+png)
 ### LLM Prompts used
 See [prompts.md](docs/prompts.md)

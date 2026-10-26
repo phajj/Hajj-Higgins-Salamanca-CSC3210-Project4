@@ -11,8 +11,9 @@ import * as THREE from "three";
 
 export function perspectiveCamera(aspect) {
   const camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 500);
-  camera.position.z = 35;
-  camera.lookAt(new THREE.Vector3(0, 0, 0));
+  camera.position.set(35, -45, 15);
+  camera.up.set(0, 0, 1);
+  camera.lookAt(new THREE.Vector3(0, 0, -10));
   return camera;
 }
 

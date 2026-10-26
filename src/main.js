@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { perspectiveCamera } from "./camera.js";
 import { loadTexture, createCard } from "./card.js";
+import { createTable } from "./table.js";
 
 const MOUSE_SENSITIVITY = 0.002;
 const CAMERA_MOVE_SPEED = 0.1;
@@ -23,6 +24,9 @@ const camera = perspectiveCamera(window.innerWidth / window.innerHeight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
+// Table
+scene.add(createTable());
+
 // Keep the camera and the renderer in sync with the window size
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -30,7 +34,6 @@ window.addEventListener("resize", () => {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
 
 // Keyboard input handling
 var wPresssed = false;
