@@ -6,9 +6,22 @@ import { createTable } from "./table.js";
 const MOUSE_SENSITIVITY = 0.002;
 const LIGHT_MOVE_SPEED = 0.1;
 
+const loader = new THREE.CubeTextureLoader();
+loader.setPath('resources/skybox/');
+const skyboxTexture = loader.load([
+  'Left.png',
+  'Right.png',
+  'Up.png',
+  'Down.png',
+  'Front.png',
+  'Back.png'
+]);
+
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+scene.background = skyboxTexture;
+// Rotate skybox to match table
+scene.backgroundRotation.x = Math.PI / 2;
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
