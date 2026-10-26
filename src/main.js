@@ -4,7 +4,7 @@ import { loadTexture, createCard } from "./card.js";
 import { createTable } from "./table.js";
 
 const MOUSE_SENSITIVITY = 0.002;
-const CAMERA_MOVE_SPEED = 0.1;
+const LIGHT_MOVE_SPEED = 0.1;
 
 // Scene
 const scene = new THREE.Scene();
@@ -12,6 +12,7 @@ scene.background = new THREE.Color(0x000000);
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.shadowMap.enabled = true;
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -24,8 +25,19 @@ const camera = perspectiveCamera(window.innerWidth / window.innerHeight);
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
+const pointLight = new THREE.PointLight(0xffffff, 1000);
+pointLight.position.set(0, 0, 20);
+pointLight.castShadow = true;
+scene.add(pointLight);
+
 // Table
-scene.add(createTable());
+const table = createTable();
+// Shadow has to applied to each piece individually
+table.traverse((child) => {
+  child.castShadow = true;
+  child.receiveShadow = true;
+});
+scene.add(table);
 
 // Keep the camera and the renderer in sync with the window size
 window.addEventListener("resize", () => {
@@ -44,10 +56,10 @@ var qPresssed = false;
 var ePresssed = false;
 
 /**
- * TODO: adjust keyboard input to move point light instead of camera
- * Handles keyboard input for perspectiveCamera movement:
- * w a s d
- * (copied from Project 2)
+ * Handles keyboard input:
+ * w a s d move the point light, q e rotate the camera,
+ * p toggles the point light, l toggles the ambient light and m toggles shadows
+ * (copied and modified from Project 2)
  */
 function keyboardInput() {
   // Handle keydown events to start movement
@@ -64,6 +76,12 @@ function keyboardInput() {
       qPresssed = true;
     if (event.key.toLocaleLowerCase() === "e")
       ePresssed = true;
+    if (event.key.toLocaleLowerCase() === "p" && !event.repeat)
+      pointLight.visible = !pointLight.visible;
+    if (event.key.toLocaleLowerCase() === "l" && !event.repeat)
+      ambientLight.visible = !ambientLight.visible;
+    if (event.key.toLocaleLowerCase() === "m" && !event.repeat)
+      pointLight.castShadow = !pointLight.castShadow;
     });
 
   // Handle keyup events to stop movement
@@ -89,13 +107,16 @@ const right = new THREE.Vector3();
 const movement = new THREE.Vector3();
 
 /**
- * Moves the perspective camera with WASD.
+ * Moves the point light with WASD, keeping it at the same height above the table.
  * Called every frame from animate() so multiple keys can be held at once.
- * (copied from project 2)
+ * (copied and modified from project 2)
  */
 function updateMovement() {
-  // Use the camera's view and horizontal axes so WASD follows its orientation.
+  // Flatten the camera's view direction onto the table so W moves the light
+  // away from the camera and A/D move it left/right on screen.
   camera.getWorldDirection(forward);
+  forward.z = 0;
+  forward.normalize();
   right.crossVectors(forward, camera.up).normalize();
   movement.set(0, 0, 0);
 
@@ -109,7 +130,7 @@ function updateMovement() {
     movement.add(right);
   // Normalize combined input so diagonal movement has the same speed.
   if (movement.lengthSq() > 0)
-    camera.position.addScaledVector(movement.normalize(), CAMERA_MOVE_SPEED);
+    pointLight.position.addScaledVector(movement.normalize(), LIGHT_MOVE_SPEED);
 }
 
 /**
