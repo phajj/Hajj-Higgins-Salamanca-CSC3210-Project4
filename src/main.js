@@ -43,6 +43,11 @@ pointLight.position.set(0, 0, 20);
 pointLight.castShadow = true;
 scene.add(pointLight);
 
+const sunLight = new THREE.DirectionalLight(0xfff2d9, 1.5);
+sunLight.castShadow = true;
+sunLight.position.set(20, 10, 40);
+scene.add(sunLight);
+
 // Table
 const table = createTable();
 // Shadow has to applied to each piece individually
@@ -95,6 +100,7 @@ function keyboardInput() {
       ambientLight.visible = !ambientLight.visible;
     if (event.key.toLocaleLowerCase() === "m" && !event.repeat)
       pointLight.castShadow = !pointLight.castShadow;
+      sunLight.castShadow = !sunLight.castShadow;
     });
 
   // Handle keyup events to stop movement
