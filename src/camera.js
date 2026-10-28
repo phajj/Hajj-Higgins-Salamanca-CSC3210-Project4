@@ -5,7 +5,7 @@ import * as THREE from "three";
  * (copied and modified from Project 2)
  * @param {number} aspect: viewport aspect ratio (width / height)
  * @returns {THREE.PerspectiveCamera}
- * 
+ *
  * @author Peter Hajj
  */
 
@@ -16,5 +16,3 @@ export function perspectiveCamera(aspect) {
   camera.lookAt(new THREE.Vector3(0, 0, -10));
   return camera;
 }
-
-
