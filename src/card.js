@@ -32,7 +32,10 @@ export function loadTexture() {
   for (const suit of suits) {
     for (const val of vals) {
       const name = `${namedCards[val] ?? val}_of_${suit}`;
-      textures[name] = loader.load(`${BASE_URL}${name}.png`);
+      // The plain jack/queen/king images are just a big suit symbol and look like
+      // aces on the table, so use the "2" versions which have face card artwork
+      const file = val > 10 ? `${name}2` : name;
+      textures[name] = loader.load(`${BASE_URL}${file}.png`);
       textures[name].colorSpace = THREE.SRGBColorSpace;
     }
   }

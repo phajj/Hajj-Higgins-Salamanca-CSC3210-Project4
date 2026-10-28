@@ -4,7 +4,6 @@ import { createDeck, shuffle, stackDeck, stackZ } from "./deck.js";
 import { createTable } from "./table.js";
 import { updateAnimations, moveCard } from "./animation.js";
 
-const MOUSE_SENSITIVITY = 0.002;
 const LIGHT_MOVE_SPEED = 0.1;
 
 const loader = new THREE.CubeTextureLoader();
@@ -79,27 +78,118 @@ hands.forEach((h, p) => {
 
 let busy = false;
 
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Aces are high in War
+const rank = (card) => (card.userData.val === 1 ? 14 : card.userData.val);
+
+// Players who still have cards in their hand
+const activePlayers = () => [0, 1, 2].filter((p) => hands[p].length > 0);
+
 /**
- * Plays the next move in the game, moving one card from each player's hand to the center pile
+ * Moves the top card of a player's hand onto their center pile
+ * @param {number} p the player index
+ * @param {boolean} faceUp whether the card lands face up
+ * @returns {Promise} resolves when the card has landed
+ */
+function playCard(p, faceUp) {
+  const card = hands[p].pop();
+  const pile = centerPiles[p];
+  const target = new THREE.Vector3(
+    CENTER_POS[p].x,
+    CENTER_POS[p].y,
+    stackZ(pile.length),
+  );
+  pile.push(card);
+  return moveCard(card, target, faceUp ? 0 : Math.PI, 0.9, 3);
+}
+
+/**
+ * Plays the next move in the game: every player with cards plays one card face up,
+ * the highest card (after any wars) takes every card in the center
  * @returns
  */
 async function playNextMove() {
-  if (!hands[0].length) return;
-  const moves = hands.map((hand, p) => {
-    const card = hand.pop();
-    const pile = centerPiles[p];
-    const target = new THREE.Vector3(
-      CENTER_POS[p].x,
-      CENTER_POS[p].y,
-      stackZ(pile.length),
-    );
-    pile.push(card);
-    return new Promise((r) => setTimeout(r, p * 150)).then(() =>
-      // stagger the moves so they don't all happen at once
-      moveCard(card, target, 0, 0.9, 3),
-    );
-  });
-  await Promise.all(moves);
+  const players = activePlayers();
+  if (players.length < 2) return;
+  await Promise.all(
+    // stagger the moves so they don't all happen at once
+    players.map((p, i) => wait(i * 150).then(() => playCard(p, true))),
+  );
+
+  const winner = await resolveBattle(players);
+  await wait(2000); // leave the played cards on the table for a moment
+  await collectPot(winner);
+
+  if (activePlayers().length === 1)
+    console.log(`Player ${winner + 1} wins the game!`);
+}
+
+/**
+ * Compares the face up cards on top of each contender's center pile. If the highest
+ * card is tied, every contender goes to war, not just the tied players: each plays
+ * one card face down and one face up, then the new face up cards are compared.
+ * A player with only one card left plays it face up, and a player with no cards
+ * left loses the war.
+ * @param {number[]} contenders the players in this battle
+ * @returns {Promise<number>} the winning player
+ */
+async function resolveBattle(contenders) {
+  const top = (p) => rank(centerPiles[p][centerPiles[p].length - 1]);
+  const best = Math.max(...contenders.map(top));
+  const tied = contenders.filter((p) => top(p) === best);
+  if (tied.length === 1) return tied[0];
+
+  // War detected
+  const fighters = contenders.filter((p) => hands[p].length > 0);
+  if (fighters.length === 0) return tied[0]; // nobody can continue the war
+  if (fighters.length === 1) return fighters[0];
+
+  await Promise.all(
+    fighters.map(async (p, i) => {
+      await wait(i * 150);
+      if (hands[p].length > 1) await playCard(p, false);
+      await playCard(p, true);
+    }),
+  );
+  return resolveBattle(fighters);
+}
+
+/**
+ * Gives every card in the center piles to the winner, placing them face down
+ * at the bottom of the winner's hand
+ * @param {number} winner the player who won the battle
+ */
+async function collectPot(winner) {
+  // Shuffle the won cards so games can't loop forever
+  const pot = shuffle(centerPiles.flatMap((pile) => pile.splice(0)));
+  const hand = hands[winner];
+  const { x, y } = DECK_POS[winner];
+  const yaw = ANGLES[winner];
+
+  // Flip the pot face down in place and turn it toward the winner,
+  // taking the shortest way around
+  await Promise.all(
+    pot.map((card) => {
+      const turns = Math.round((card.rotation.z - yaw) / (2 * Math.PI));
+      const toYaw = yaw + turns * 2 * Math.PI;
+      return moveCard(card, card.position.clone(), Math.PI, 0.5, 2, toYaw);
+    }),
+  );
+
+  // Lift the winner's hand to make room underneath for the won cards
+  await Promise.all(
+    hand.map((card, i) =>
+      moveCard(card, new THREE.Vector3(x, y, stackZ(i + pot.length)), Math.PI, 0.25),
+    ),
+  );
+
+  hand.unshift(...pot);
+  await Promise.all(
+    pot.map((card, i) =>
+      moveCard(card, new THREE.Vector3(x, y, stackZ(i)), Math.PI, 0.7),
+    ),
+  );
 }
 
 // Keep the camera and the renderer in sync with the window size
