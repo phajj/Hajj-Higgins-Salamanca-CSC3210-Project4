@@ -15,6 +15,9 @@ This file records the prompts we gave to AI coding assistents and/or other LLMs 
 ## Jackson
 
 - Changed all of the table and card materials from MeshBasicMaterial to MeshPhongMaterial so they respond to lighting.
+- Add a delay of two seconds from when the cards finish there draw animation to when they slide into the bottom of the deck
+- Help me correct the logic for the war game
+- Update face cards to use their artwork instead of symbol
 
 ## Laura
 

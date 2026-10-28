@@ -12,11 +12,20 @@ const animations = [];
  * @param {number} toRotX the target rotation around the x-axis
  * @param {number} duration the animation duration (default: 0.8)
  * @param {number} arc the height of the arc (default: 0)
+ * @param {number} toRotZ the target rotation around the z-axis (default: current yaw)
  * @returns {Promise} a promise that resolves when the animation is complete
  */
-export function moveCard(card, toPos, toRotX, duration = 0.8, arc = 0) {
+export function moveCard(
+  card,
+  toPos,
+  toRotX,
+  duration = 0.8,
+  arc = 0,
+  toRotZ = card.rotation.z,
+) {
   const fromPos = card.position.clone();
   const fromRot = card.rotation.x;
+  const fromRotZ = card.rotation.z;
   return new Promise((resolve) => {
     animations.push({
       card,
@@ -24,6 +33,8 @@ export function moveCard(card, toPos, toRotX, duration = 0.8, arc = 0) {
       toPos,
       fromRot,
       toRot: toRotX,
+      fromRotZ,
+      toRotZ,
       duration,
       arc,
       t: 0,
@@ -44,6 +55,7 @@ export function updateAnimations(dt) {
     a.card.position.lerpVectors(a.fromPos, a.toPos, e);
     a.card.position.z += Math.sin(Math.PI * e) * a.arc; // lift along z (z-up world)
     a.card.rotation.x = a.fromRot + (a.toRot - a.fromRot) * e;
+    a.card.rotation.z = a.fromRotZ + (a.toRotZ - a.fromRotZ) * e;
     if (a.t === 1) {
       animations.splice(i, 1);
       a.resolve();
