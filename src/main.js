@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { perspectiveCamera } from "./camera.js";
+import { perspectiveCamera, setCameraView } from "./camera.js";
 import { createDeck, shuffle, stackDeck, stackZ } from "./deck.js";
 import { createTable } from "./table.js";
 import { updateAnimations, moveCard } from "./animation.js";
@@ -30,8 +30,21 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Camera (perspective in ship cockpit)
+// Camera (starts in the top down view)
 const camera = perspectiveCamera(window.innerWidth / window.innerHeight);
+let currentView = "topDown";
+
+// Number keys that select each camera view
+const VIEW_KEYS = { 1: "topDown", 2: "angled", 3: "side" };
+
+/**
+ * Switches the camera to a preset view and remembers which one is active
+ * @param {string} view: key of CAMERA_VIEWS
+ */
+function changeView(view) {
+  currentView = view;
+  setCameraView(camera, view);
+}
 
 // Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -209,7 +222,8 @@ var dPresssed = false;
 /**
  * Handles keyboard input:
  * w a s d move the point light,
- * p toggles the point light, l toggles the ambient light and m toggles shadows
+ * p toggles the point light, l toggles the ambient light and m toggles shadows,
+ * c cycles through the camera views, 1 2 3 pick a camera view
  * (copied and modified from Project 2)
  */
 function keyboardInput() {
@@ -227,9 +241,16 @@ function keyboardInput() {
       pointLight.visible = !pointLight.visible;
     if (event.key.toLocaleLowerCase() === "l" && !event.repeat)
       ambientLight.visible = !ambientLight.visible;
-    if (event.key.toLocaleLowerCase() === "m" && !event.repeat)
+    if (event.key.toLocaleLowerCase() === "m" && !event.repeat) {
       pointLight.castShadow = !pointLight.castShadow;
-    sunLight.castShadow = !sunLight.castShadow;
+      sunLight.castShadow = !sunLight.castShadow;
+    }
+    if (event.key.toLocaleLowerCase() === "c" && !event.repeat) {
+      // Cycle to the next view in 1, 2, 3 order
+      const views = Object.values(VIEW_KEYS);
+      changeView(views[(views.indexOf(currentView) + 1) % views.length]);
+    }
+    if (VIEW_KEYS[event.key] && !event.repeat) changeView(VIEW_KEYS[event.key]);
   });
 
   // Handle keyup events to stop movement
@@ -245,6 +266,7 @@ function keyboardInput() {
 const forward = new THREE.Vector3();
 const right = new THREE.Vector3();
 const movement = new THREE.Vector3();
+const WORLD_UP = new THREE.Vector3(0, 0, 1);
 
 /**
  * Moves the point light with WASD, keeping it at the same height above the table.
@@ -256,8 +278,10 @@ function updateMovement() {
   // away from the camera and A/D move it left/right on screen.
   camera.getWorldDirection(forward);
   forward.z = 0;
+  // Looking straight down there is no flat view direction, so use screen up
+  if (forward.lengthSq() < 1e-6) forward.copy(camera.up);
   forward.normalize();
-  right.crossVectors(forward, camera.up).normalize();
+  right.crossVectors(forward, WORLD_UP).normalize();
   movement.set(0, 0, 0);
 
   if (wPresssed) movement.add(forward);

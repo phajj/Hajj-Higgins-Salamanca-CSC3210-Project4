@@ -10,15 +10,18 @@ Computer Graphics Project 4, War Card Game
 
 ## Overview
 
-This project is a 3D simulation of the classic card game, War, developed using Three.js. The scene is lit from overhead and surrounded by a twilight skybox. The scene features ambient lighting and point lighting which can be toggled by the user.
+This project is a 3D simulation of the classic card game, War, developed using [Three.js](https://threejs.org/). The scene is lit from overhead and surrounded by a twilight skybox. The scene features ambient lighting and point lighting which can be toggled by the user.
 
 ## How to Play
 
-- Press the 'N' key to play out each round of the game
-- Use the WASD keys to move the point light
-- Press the 'L' key to toggle on and off the ambient light
-- Press the 'P' key to toggle on and off the point light
-- Press the 'M' key to toggle shadows on and off for the sun and point light
+- Press the `N` key to play out each round of the game
+- Use the `W` `A` `S` `D` keys to move the point light
+- Press the `L` key to toggle on and off the ambient light
+- Press the `P` key to toggle on and off the point light
+- Press the `M` key to toggle shadows on and off for the sun and point light
+- The camera starts in a top-down view of the table
+- Press the `C` key to cycle through the top-down, angled, and side camera views
+- Press `1` for the top-down view, `2` for the angled view, and `3` for the side view (shows off the skybox)
 
 ## Running the Project
 
@@ -36,6 +39,8 @@ This project is a 3D simulation of the classic card game, War, developed using T
 
 - Lighting: One overhead point light, ambient lighting, and a twilight skybox containing a sun as a directional light
   that casts shadows alongside the point light.
+- Camera: Three preset views (top-down, angled, and side) defined in `CAMERA_VIEWS` in `src/camera.js` and applied
+  with `setCameraView`. `W` `A` `S` `D` light movement is relative to whichever view is active.
 
 ### Challenges
 

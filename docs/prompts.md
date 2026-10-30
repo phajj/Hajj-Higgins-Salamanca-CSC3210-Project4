@@ -11,6 +11,9 @@ This file records the prompts we gave to AI coding assistents and/or other LLMs 
 - Clean up @src/table.js . Currently I had a lot of articles left over from copy pasting from Three.js's docs, variables such as texture then in const material = new THREE.MeshBasicMaterial({map:texture}) are unnecessary to be formatted like that. Additionally clean up the loop to adjust where the legs get generated, they are supposed to hit all four corners of the topGeo
   - Added the table to the scene in main.js.
   - Adjusted the angle of the camera so all four legs and the tabletop are visable
+- Set the camera in @src/camera.js to default as topdown view ie (0, 0, 0), then map the c key in @src/main.js to switch between the current camera angle and the top down angle. Additionally add a camera angle that has a centered view of the side of the table (to properly display the scenic skybox). In @src/main.js bind each angle to 1,2,3 keys (1 for main topdown, 2 for current and 3 for side angle). Finally update the controls and any other docs in @README.md
+  - Fixed the M key handler so the sun's shadow toggle only runs on M instead of on every key press.
+  - Wrapped each key letter in the README controls in backticks.
 
 ## Jackson
 
