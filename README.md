@@ -1,18 +1,24 @@
 # Hajj-Higgins-Salamanca-CSC3210-Project4
+
 Computer Graphics Project 4, War Card Game
 
 ## Group Members:
-- Peter Hajj (PM, )
-- Jackson Higgins (TODO add list of contributions)
-- Laura Salamanca (TODO add list of contributions)
+
+- Peter Hajj (PM, Card & Table Designer)
+- Jackson Higgins (Game Logic & Lighting)
+- Laura Salamanca (Animation Designer)
 
 ## Overview
 
-TODO
+This project is a 3D simulation of the classic card game, War, developed using Three.js. The scene is lit from overhead and surrounded by a twilight skybox. The scene features ambient lighting and point lighting which can be toggled by the user.
 
 ## How to Play
 
-TODO
+- Press the 'N' key to play out each round of the game
+- Use the WASD keys to move the point light
+- Press the 'L' key to toggle on and off the ambient light
+- Press the 'P' key to toggle on and off the point light
+- Press the 'M' key to toggle shadows on and off for the sun and point light
 
 ## Running the Project
 
@@ -28,12 +34,19 @@ TODO
 
 ## Technical Docs
 
-### Challenges 
-TODO
+- Lighting: One overhead point light, ambient lighting, and a twilight skybox containing a sun as a directional light
+  that casts shadows alongside the point light.
+
+### Challenges
+
+- N/A
 
 ### Resources
+
 - Playing card textures: [webisso/playing-cards](https://github.com/webisso/playing-cards) on GitHub
 - Rules for War: http://www.pagat.com/war/war.html
 - Table texture: [Magnific](https://www.magnific.com/free-photo/natural-wooden-background_5505940.htm#fromView=keyword&page=1&position=6&uuid=5cf89975-08ea-41e9-9edf-86598d63d669&track=ais_hybrid&query=Wood+texture+png)
+
 ### LLM Prompts used
+
 See [prompts.md](docs/prompts.md)
