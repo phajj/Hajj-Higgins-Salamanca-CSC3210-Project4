@@ -10,7 +10,7 @@ Computer Graphics Project 4, War Card Game
 
 ## Overview
 
-This project is a 3D simulation of the classic card game, War, developed using Three.js. The scene is lit from overhead and surrounded by a twilight skybox. The scene features ambient lighting and point lighting which can be toggled by the user.
+This project is a 3D simulation of the classic card game, War, developed using [Three.js](https://threejs.org/). The scene is lit from overhead and surrounded by a twilight skybox. The scene features ambient lighting and point lighting which can be toggled by the user.
 
 ## How to Play
 
